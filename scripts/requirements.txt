@@ -1,0 +1,12 @@
+#atualizar pip
+#pip install --upgrade pip
+#atualizar dependencias necesseário usando o requiments.txt
+#pip install -r requirements.txt --upgrade
+#robotframework               6.0.1
+#robotframework-appiumlibrary 2.0.0
+#robotframework-faker         5.0.0
+
+robotframework
+robotframework-appiumlibrary
+robotframework-faker
+

@@ -1,0 +1,14 @@
+{
+    "valid_data":{
+        "user":"maluerhart@sofisant.local",
+        "password":"1234567"
+    },
+    "invalid_data":{
+        "user":"nope@testefail.com",
+        "password":"potato12"
+    },
+    "empty_data":{
+      "user":"",
+      "password":""
+    }
+  }

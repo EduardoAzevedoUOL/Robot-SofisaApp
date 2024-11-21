@@ -1,0 +1,4 @@
+reports/*
+*.xml
+*.html
+**/*__pycache__/*

@@ -1,0 +1,6 @@
+robotframework
+robotframework-appiumlibrary
+robotframework-faker
+requests
+robotframework-jsonlibrary
+robotframework-requests

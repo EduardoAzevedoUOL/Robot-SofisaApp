@@ -1,0 +1,45 @@
+pipeline {
+    agent {label "label"}
+    
+    environment {
+        REGISTRY_URL = ''
+        SONARQUBE_HOST_URL = ''
+        SONARQUBE_LOGIN = ''
+        TAG = "${BUILD_ID}"
+        JOB_NAME = "${JOB_NAME}"
+    }
+
+    stages {
+        stage('Update submodules') {
+            steps {
+              withCredentials([gitUsernamePassword(credentialsId: 'compass-devops-bitbucket')]) {
+                sh 'git submodule init'
+                sh 'git submodule update --remote --merge --recursive'
+              }
+            }
+        }
+        
+        stage('Tests Run') {
+            steps {
+                container('robot-framework') {
+                    sh 'pip install -r requirements.txt'
+                    withCredentials([usernamePassword(credentialsId: 'browser-stack-token', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        sh "robot -v APP_OS:${APP_OS} -v EXEC_ENV:${EXEC_ENV} -v ENVIRONMENT:${ENVIRONMENT} -v BS_USER:${USERNAME} -v BS_KEY:${PASSWORD} -v BS_APP:${BS_APP} -v DEVICE_NAME:${DEVICE_NAME} -v PLATFORM_VERSION:${PLATFORM_VERSION} -i ${TEST_TAG} -d ./reports tests"
+                    }
+                }
+            }
+        }
+    }
+
+     post{
+         success{
+                 slackSend(color: "good", message: "Job *${TAG}/${JOB_BASE_NAME}* executado com sucesso", channel: "devops-qa-notifications")
+             }
+         failure{
+                 slackSend(color: "danger", message: "Job *${TAG}/${JOB_BASE_NAME}* falhou, favor validar logs em ${JOB_URL}${TAG}/consoleText para mais detalhes", channel: "devops-qa-notifications")
+         }
+         always{
+            robot outputPath: 'reports', logFileName: 'log.html', outputFileName: 'output.xml', reportFileName: 'report.hml', passThreshold: 100, unstableThreshold: 75.0
+        }
+     }
+}

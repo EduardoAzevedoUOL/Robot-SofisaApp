@@ -1,0 +1,14 @@
+{
+  "valid_data":{
+      "user":"bob@example.com",
+      "password":"10203040"
+  },
+  "invalid_data":{
+      "user":"nope@testefail.com",
+      "password":"potato12"
+  },
+  "empty_data":{
+      "user":"",
+      "password":""
+  }
+}
